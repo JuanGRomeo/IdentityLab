@@ -150,13 +150,6 @@ namespace IdentitySample.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-
-                // Add the Address properties:
-                user.Address = model.Address;
-                user.City = model.City;
-                user.State = model.State;
-                user.PostalCode = model.PostalCode;
-
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -176,9 +169,9 @@ namespace IdentitySample.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(int userId, string code)
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId <= 0 || code == null)
+            if (userId == null || code == null)
             {
                 return View("Error");
             }
@@ -288,7 +281,7 @@ namespace IdentitySample.Controllers
         public async Task<ActionResult> SendCode(string returnUrl)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
-            if (userId <= 0)
+            if (userId == null)
             {
                 return View("Error");
             }
